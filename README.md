@@ -1,6 +1,22 @@
 # business-contact-managment-database
 A relational database for managing business contacts, companies, and interactions. It includes tables for contact details, communication events, relationships, and company info. It ensures efficient data retrieval, enforces data integrity with foreign keys, and provides a scalable foundation for CRM and business analysis.
 
+# Files:
+DDL.sql: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.
+
+Usage: Run this file first to create the necessary database structure on your MySQL server.
+DML.sql: Includes Data Manipulation Language (DML) statements to insert, update, and delete data in the database.
+
+Usage: Run this file after DDL.sql to populate your tables with data and manage the records.
+Python connector setup.py: A Python script for connecting to the MySQL database and interacting with the data using the MySQL connector.
+
+Usage: Run this script to programmatically query and manage the database via Python.
+Steps to Launch Locally:
+Install MySQL Server locally.
+Run DDL.sql to set up the database and tables.
+Execute DML.sql to populate the database with sample data.
+Use setup.py to connect and interact with the database using Python.
+
 # Tables
 ✅ **Contacts** – Names, job titles, and related company details.  
 ✅ **Companies** – Information about the companies where contacts are employed.  
