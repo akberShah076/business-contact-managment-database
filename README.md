@@ -1,8 +1,10 @@
 # business-contact-managment-database
 A relational database for managing business contacts, companies, and interactions. It includes tables for contact details, communication events, relationships, and company info. It ensures efficient data retrieval, enforces data integrity with foreign keys, and provides a scalable foundation for CRM and business analysis.
 
-# Files:
+# Files and Usage:
 schema_design_EER.pdf: Enhanced Entity-Relationship diagram for database.
+
+Usage: Provides a detailed visual representation of the database schema, including entities, relationships, and constraints, to guide database design and ensure data integrity.
 
 DDL.sql: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.
 
