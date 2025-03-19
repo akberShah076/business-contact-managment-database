@@ -3,12 +3,15 @@ A relational database for managing business contacts, companies, and interaction
 
 # Files:
 DDL.sql: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.
+
 Usage: Run this file first to create the necessary database structure on your MySQL server.
 
 DML.sql: Includes Data Manipulation Language (DML) statements to insert, update, and delete data in the database.
+
 Usage: Run this file after DDL.sql to populate your tables with data and manage the records.
 
 Python connector setup.py: A Python script for connecting to the MySQL database and interacting with the data using the MySQL connector.
+
 Usage: Run this script to programmatically query and manage the database via Python.
 
 Steps to Launch Locally:
