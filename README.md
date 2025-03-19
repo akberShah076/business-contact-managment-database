@@ -2,21 +2,22 @@
 A relational database for managing business contacts, companies, and interactions. It includes tables for contact details, communication events, relationships, and company info. It ensures efficient data retrieval, enforces data integrity with foreign keys, and provides a scalable foundation for CRM and business analysis.
 
 # Files and Usage:
-schema_design_EER.pdf: Enhanced Entity-Relationship diagram for database.
+**schema_design_EER.pdf**: Enhanced Entity-Relationship diagram for database.  
 
-Usage: Provides a detailed visual representation of the database schema, including entities, relationships, and constraints, to guide database design and ensure data integrity.
+**Usage**: **Provides** a detailed visual representation of the database schema, including entities, relationships, and constraints, to guide database design and ensure data integrity.  
 
-DDL.sql: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.
+**DDL.sql**: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.  
 
-Usage: Run this file first to create the necessary database structure on your MySQL server.
+**Usage**: **Run** this file first to create the necessary database structure on your MySQL server.  
 
-DML.sql: Includes Data Manipulation Language (DML) statements to insert, update, and delete data in the database.
+**DML.sql**: Includes Data Manipulation Language (DML) statements to insert, update, and delete data in the database.  
 
-Usage: Run this file after DDL.sql to populate your tables with data and manage the records.
+**Usage**: **Run** this file after **DDL.sql** to populate your tables with data and manage the records.  
 
-Python connector setup.py: A Python script for connecting to the MySQL database and interacting with the data using the MySQL connector.
+**Python connector setup.py**: A Python script for connecting to the MySQL database and interacting with the data using the MySQL connector.  
 
-Usage: Run this script to programmatically query and manage the database via Python.
+**Usage**: **Run** this script to programmatically query and manage the database via Python.
+
 
 Steps to Launch Locally:
 Install MySQL Server locally.
