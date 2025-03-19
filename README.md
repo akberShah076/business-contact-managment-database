@@ -2,6 +2,8 @@
 A relational database for managing business contacts, companies, and interactions. It includes tables for contact details, communication events, relationships, and company info. It ensures efficient data retrieval, enforces data integrity with foreign keys, and provides a scalable foundation for CRM and business analysis.
 
 # Files:
+schema_design_EER.pdf: Enhanced Entity-Relationship diagram for database.
+
 DDL.sql: Contains Data Definition Language (DDL) statements to create the database schema. It sets up tables for storing contacts, companies, phone numbers, emails, and interaction events.
 
 Usage: Run this file first to create the necessary database structure on your MySQL server.
