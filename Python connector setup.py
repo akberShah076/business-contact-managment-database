@@ -2,6 +2,7 @@ import pymysql
 import sys
 import time
 
+# Displays the user menu
 def displayMenu():
     print()
     print("BCTIS Database Interaction")
@@ -18,6 +19,7 @@ def displayMenu():
     print("10. List all contacts with a home address in a specific city")
     print("11. Quit")
 
+# Gets a valid user menu choice
 def getChoice():
     choice = input(">> ")
     while (not choice.isdigit()):
@@ -26,64 +28,96 @@ def getChoice():
         choice = input(">> ")
     return int(choice)
 
+# Main function to run the application
 def main():
-    cnx = pymysql.connect(host='127.0.0.1', user='root', password='fortknox', database='BCITS_schema')
+    # Establish MySQL connection
+    cnx = pymysql.connect(
+        host='127.0.0.1',
+        user='root',
+        password='fortknox',
+        database='BCITS_schema'
+    )
     cursor = cnx.cursor()
+
     displayMenu()
     choice = getChoice()
+
+    # Loop until user chooses to quit
     while choice != 11:
         if choice == 1:
+            # List all interaction events for a specific contact
             contactID = input("Enter contact ID: ")
             query = "SELECT date, interactionType, comments FROM Interaction_Events WHERE contactID = %s"
             cursor.execute(query, (contactID,))
             for (date, interactionType, comments) in cursor:
                 print(date, interactionType, comments)
+
         elif choice == 2:
+            # List all interaction events within a specific date range
             start_date = input("Enter start date (YYYY-MM-DD): ")
             end_date = input("Enter end date (YYYY-MM-DD): ")
-            query = "SELECT eventID, contactID, date, interactionType, comments FROM Interaction_Events WHERE date BETWEEN %s AND %s"
+            query = """
+                SELECT eventID, contactID, date, interactionType, comments 
+                FROM Interaction_Events 
+                WHERE date BETWEEN %s AND %s
+            """
             cursor.execute(query, (start_date, end_date))
             for row in cursor:
                 print(row)
+
         elif choice == 3:
+            # List all contacts for a specific company
             companyID = input("Enter Company ID: ")
             query = "SELECT ContactID, Name, JobTitle FROM Contacts WHERE EmployerID = %s"
             cursor.execute(query, (companyID,))
             for (ContactID, Name, JobTitle) in cursor:
                 print(ContactID, Name, JobTitle)
+
         elif choice == 4:
+            # Count phone calls in a specific date range
             start_date = input("Enter start date (YYYY-MM-DD): ")
             end_date = input("Enter end date (YYYY-MM-DD): ")
-            query = "SELECT COUNT(*) AS TotalPhoneCalls FROM Interaction_Events WHERE interactionType = 'phone' AND date BETWEEN %s AND %s"
+            query = """
+                SELECT COUNT(*) AS TotalPhoneCalls 
+                FROM Interaction_Events 
+                WHERE interactionType = 'phone' AND date BETWEEN %s AND %s
+            """
             cursor.execute(query, (start_date, end_date))
             print("Total phone calls:", cursor.fetchone()[0])
+
         elif choice == 5:
+            # List all subordinates of a specific manager
             managerID = input("Enter manager's ID: ")
             query = """
                 SELECT 
                     c.name AS SubordinateName,
                     c.jobTitle AS JobTitle,
-                    (SELECT pn.phoneNumber FROM Phone_Numbers pn WHERE pn.contactID = c.contactID AND pn.phoneType = 'office' LIMIT 1) AS OfficePhoneNumber,
-                    (SELECT ea.emailAddress FROM Email_Addresses ea WHERE ea.contactID = c.contactID AND ea.emailType = 'work' LIMIT 1) AS PrimaryEmailAddress
-                FROM 
-                    Contacts c
-                WHERE 
-                    c.contactID IN (
-                        SELECT r.subordinateID 
-                        FROM Relationships r
-                        JOIN Relationship_Type rt ON r.relationshipTypeID = rt.relationshipTypeID
-                        WHERE r.managerID = %s AND rt.relationshipType = 'subordinate'
-                    );
+                    (SELECT pn.phoneNumber FROM Phone_Numbers pn 
+                     WHERE pn.contactID = c.contactID AND pn.phoneType = 'office' LIMIT 1) AS OfficePhoneNumber,
+                    (SELECT ea.emailAddress FROM Email_Addresses ea 
+                     WHERE ea.contactID = c.contactID AND ea.emailType = 'work' LIMIT 1) AS PrimaryEmailAddress
+                FROM Contacts c
+                WHERE c.contactID IN (
+                    SELECT r.subordinateID 
+                    FROM Relationships r
+                    JOIN Relationship_Type rt ON r.relationshipTypeID = rt.relationshipTypeID
+                    WHERE r.managerID = %s AND rt.relationshipType = 'subordinate'
+                );
             """
             cursor.execute(query, (managerID,))
             for row in cursor:
                 print(row)
+
         elif choice == 6:
+            # List managers with >2 subordinates and at least 1 secretary
             query = """
-                SELECT r.managerID, c.name AS ManagerName,
+                SELECT 
+                    r.managerID, 
+                    c.name AS ManagerName,
                     COUNT(DISTINCT CASE WHEN rt.relationshipType = 'Subordinate' THEN r.subordinateID END) AS NumberOfSubordinates,
                     COUNT(DISTINCT CASE WHEN rt.relationshipType = 'Secretary' THEN r.subordinateID END) AS NumberOfSecretaries
-                FROM Relationships r JOIN Contacts c ON r.managerID = c.contactID
+                FROM Relationships r 
+                JOIN Contacts c ON r.managerID = c.contactID
                 JOIN Relationship_Type rt ON r.relationshipTypeID = rt.relationshipTypeID
                 GROUP BY r.managerID, c.name
                 HAVING NumberOfSubordinates > 2 AND NumberOfSecretaries > 0;
@@ -91,9 +125,14 @@ def main():
             cursor.execute(query)
             for row in cursor:
                 print(row)
+
         elif choice == 7:
+            # List companies with count of associated contacts
             query = """
-                SELECT c.CompanyID, c.CompanyName, COUNT(ct.ContactID) AS NumberOfContacts
+                SELECT 
+                    c.CompanyID, 
+                    c.CompanyName, 
+                    COUNT(ct.ContactID) AS NumberOfContacts
                 FROM Companies c
                 JOIN Contacts ct ON c.CompanyID = ct.EmployerID
                 GROUP BY c.CompanyID, c.CompanyName
@@ -102,12 +141,21 @@ def main():
             cursor.execute(query)
             for row in cursor:
                 print(row)
+
         elif choice == 8:
-            query = "SELECT contactID, COUNT(*) AS NumberOfInteractions FROM Interaction_Events GROUP BY contactID HAVING NumberOfInteractions > 3;"
+            # List contacts with more than 3 interaction events
+            query = """
+                SELECT contactID, COUNT(*) AS NumberOfInteractions 
+                FROM Interaction_Events 
+                GROUP BY contactID 
+                HAVING NumberOfInteractions > 3;
+            """
             cursor.execute(query)
             for row in cursor:
                 print(row)
+
         elif choice == 9:
+            # Count total events by interaction type
             query = """
                 SELECT 
                     SUM(CASE WHEN interactionType = 'phone' THEN 1 ELSE 0 END) AS TotalPhoneEvents,
@@ -118,10 +166,13 @@ def main():
             cursor.execute(query)
             for row in cursor:
                 print(row)
+
         elif choice == 10:
+            # List all contacts with home address in a given city
             city = input("Enter city name: ")
             query = """
-                SELECT c.ContactID, c.Name, a.street, a.city, a.state, a.postalCode, a.country
+                SELECT 
+                    c.ContactID, c.Name, a.street, a.city, a.state, a.postalCode, a.country
                 FROM Contacts c
                 JOIN Addresses a ON c.contactID = a.contactID
                 WHERE a.addressType = 'home' AND a.city = %s;
@@ -130,9 +181,11 @@ def main():
             for row in cursor:
                 print(row)
 
+        # Show menu again and prompt for next choice
         displayMenu()
         choice = getChoice()
 
+    # Close cursor and connection on exit
     cursor.close()
     cnx.close()
 
